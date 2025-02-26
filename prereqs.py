@@ -1,3 +1,5 @@
+
+
 class User:
     def __init__(self, bal: float, debt: float, cscore: float):
         self.balance = bal
@@ -5,17 +7,18 @@ class User:
         self.credit_score = cscore
 
     def withdraw(self, withdrawal: float):
-        for i in range(0, withdrawal):
-            self.balance -= 1
-            if self.balance == 0:
-                self.debt += 1
-                self.credit_score -= 0.002
+        if withdrawal > self.balance:
+            self.debt += withdrawal - self.balance
+            self.credit_score -= (withdrawal - self.balance) * 0.002
+            self.balance = 0
+        else:
+            self.balance -= withdrawal
+
         return self
 
-    def deposit(deposit: float):
-        for i in range(0, deposit):
-            self.balance += 1
-            self.credit_score += 0.003
+    def deposit(self, deposit:float):
+        self.balance += deposit
+        self.credit_score += deposit * 0.003
         return self
 
     def credit_check(self):
@@ -27,9 +30,15 @@ class User:
         debt, cscore = 0, 0
         user = User(bal, debt, cscore)
         users_dict[uname] = user
-        fh = open("Bankusers.txt", "w+")
-        fh.write(str(users_dict))
-        fh.close()
+
+        with open("Bankusers.txt", "w+") as f:
+            f.write(str(users_dict))
+
+        f = open("Bankusers.txt", "w+")
+        f.write(str(users_dict))
+        f.close()
+
+        print(f"User {uname}")
 
 
 users_dict = {}
