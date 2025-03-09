@@ -76,10 +76,11 @@ class Backend:
 
     # This function saves changes in the file.
     def save(self) -> None:
+        #Saves all user data into the file
         with open(self.fname, 'w+') as fw:
             for user in self.userdb.values():
                 fw.write(f"{user.name},{user.balance},{user.debt},{user.cscore}\n")
-
+    # Vishal Murali Kannan
     # The function loads all user data stored in Bankusers.txt
     def load_user(self) -> dict:
         try:
@@ -96,60 +97,64 @@ class Backend:
             return self.userdb
         except FileNotFoundError:
             print("Database not found.")
-
+    # Vishal Murali Kannan
     # The function creates a new user and stores their data in the dictionary
-    def create_user(self, uname: str) -> None:
+    def create_user(self, uname: str, balance: float) -> str:
         if uname in self.userdb:
-            print("Account {} already exists!".format(uname))
-            return
-        balance = float(input("Enter balance to deposit: "))
-        debt, cscore = 0, 700
+            return f"Account {uname} already exists!"
+        if balance <= 0:
+            raise ValueError("Initial deposit must be greater than 0.")
+        debt, cscore = 0, 700 #default debt score for new users
         self.userdb[uname] = User(uname, balance, debt, cscore)
-        print("Account for {} created.".format(uname))
+        return f"Account for {uname} created successfully."
 
+    # Vishal Murali Kannan
     # This function allows a user to deposit money into their bank account
-    def depositer(self) -> None:
-        uname = input("Enter account holder name to deposit money in: ")
-        if uname in self.userdb:
-            dep = float(input("Enter amount to deposit: "))
-            self.userdb[uname].deposit(dep)
-        else:
-            print("Account not found.")
+    def depositer(self, uname: str, amount: float) -> None:
+        if uname not in self.userdb:
+            raise ValueError(f"Account {uname} not found.")  # Sebastian Williams (Value errors)
 
+        if amount <= 0:
+            raise ValueError("Deposit amount must be greater than 0.")
+        self.userdb[uname].deposit(amount)
+
+
+    # Vishal Murali Kannan
+    # Value errors (Sebastian W)
     # This function allows a user to withdraw money from their bank account
-    def withdrawer(self) -> None:
-        uname = input("Enter account holder name to withdraw money from: ")
-        if uname in self.userdb:
-            witd = float(input("Enter amount to withdraw: "))
-            self.userdb[uname].withdraw(witd)
-        else:
-            print("Account not found.")
+    def withdrawer(self, uname: str, amount:float) -> None:
+        if uname not in self.userdb:
+            raise ValueError(f"Account {uname} not found.")
+        if amount <=0:
+            raise ValueError("Withdrawal amount must be greater than 0.")
+        self.userdb[uname].withdraw(amount)
 
+    # Vishal Murali Kannan
+    # Value errors added (Sebastian W)
     # This function displays credit score of the user's account
-    def cscore_viewer(self) -> None:
-        uname = input("Enter account holder name to view credit score: ")
-        if uname in self.userdb:
-            print("{}'s credit score: {}".format(uname, self.userdb[uname].view_cscore()))
-        else:
-            print("Account not found.")
+    def cscore_viewer(self, uname: str) -> float:
+        if uname not in self.userdb:
+            raise ValueError(f"Account {uname} not found.")
+        return self.userdb[uname].view_cscore()
 
+    # Vishal Murali Kannan
+    # Value errors added - Sebastian W
     # This function takes in sender and recipient name, and calls the transfer function between those two accounts
-    def transfer_money(self) -> None:
-        sender = input("Enter sender's account name: ")
-        recipient  = input("Enter recipient's account name: ")
+    def transfer_money(self, sender: str, recipient: str, amount: float) -> str:
         if sender not in self.userdb or recipient not in self.userdb:
-            print("Either name does not exist in PyBank.")
-            return
-        sinfo = self.userdb[sender]
-        rinfo = self.userdb[recipient]
-        try:
-            amount = float(input("Enter the amount to transfer: "))
-            if amount <= 0:
-                print("The amount must be greater than 0.")
-                return
-            if sinfo.transfer(amount, rinfo):
-                print("Transfer of {} from {} to {} successful!".format(amount, sender, recipient))
-        except ValueError:
-            print("Invalid amount entered.")
+            raise ValueError(f"Sender {sender}'s account not found.")
+        if recipient not in self.userdb:
+            raise ValueError(f"Recipient {recipient}'s account not found.")
+        if amount <= 0:
+            raise ValueError("Transfer amount must be greater than 0.")
+        sender_account = self.userdb[sender]
+        recipient_account = self.userdb[recipient]
+        if sender_account.transfer(amount,recipient_account):
+            self.save()
+            return f"Transfer of {amount} from {sender} to {recipient} successful!"
+        else:
+            raise ValueError("Transfer failed. Insufficient funds. Get your money up, not your funny up fr :/")
+
+
 
 
