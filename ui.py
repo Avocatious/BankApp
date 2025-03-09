@@ -1,6 +1,8 @@
 from prereqs import User, Backend
-
+#Sebastian Williams and Vishal Murali Kannan
 def main():
+    # Sebastian Williams
+    # instantiates Backend class from prereqs.py
     backend = Backend()
     while True:
         print("Welcome to PyBank!:")
@@ -11,7 +13,7 @@ def main():
         print("5. Transfer Money")
         print("6. Exit")
         choice = input("What would you like to do today? (Choose a number): ")
-
+        # Executes functions from Backend based on user selection
         if choice == '1':
             uname = input("Enter account holder name: ")
             backend.create_user(uname)
@@ -28,8 +30,9 @@ def main():
             backend.transfer_money()
             backend.save()
         elif choice == '6':
-            print("Thank you for using PyBank!")
+            print("Thank you for using PyBank! Shutting down...")
             break
+        #Vishal Murali Kannan
         elif choice.lower() == 'admin':
             db = backend.load_user()
             if db:
@@ -39,7 +42,6 @@ def main():
                 print("Empty Database.")
         else:
             print("Invalid choice. Input can only be a number from 1 through 6.")
-
 
 if __name__ == "__main__":
     main()
