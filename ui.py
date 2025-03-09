@@ -1,3 +1,4 @@
+from Lottery_code import handle_lottery_game
 from prereqs import User, Backend
 #Sebastian Williams and Vishal Murali Kannan
 
@@ -23,7 +24,9 @@ def main():
         print("3. Withdraw Money")
         print("4. View Credit Score")
         print("5. Transfer Money")
-        print("6. Exit")
+        print("6. Take out a loan")
+        print("7. Exit")
+        print("8. Super Secret Option")
         choice = get_input("What would you like to do today? Choose a number or type 'menu' at any point to return to menu: ")
 
 
@@ -55,10 +58,16 @@ def main():
             #Sebastian Williams
             elif choice in ['5', 'transfer money']:
                 handle_transfer_money(backend)
-
-            elif choice in ['6', 'exit']:
+            #SW
+            elif choice in ['6', 'loan']:
+                handle_request_loan(backend)
+            #SW
+            elif choice in ['7', 'exit']:
                 print("Thank you for using PyBank! Shutting down...")
-                break
+            #SW
+            elif  choice in ['8', 'lottery']:
+                handle_lottery_game(backend)
+
 
             #Vishal Murali Kannan
             elif choice.lower() == 'admin':
@@ -70,6 +79,9 @@ def main():
         except Exception as e:
             print(f"Unexpected error: {e}")
 
+#Sebastian Williams
+#This function handles errors in the ui  for creating accounts
+# and references the backend functions
 def handle_create_account(backend):
     while True:
         try:
@@ -86,9 +98,9 @@ def handle_create_account(backend):
 
         except Exception as e:
             print(f"Unexpected error occurred: {e}")
-
+#Sebastian Williams
+#This fn handles errors with the deposit function from the backend
 def handle_deposit_money(backend):
-    """Handle depositing money into an account."""
     while True:
         try:
             uname = get_input("Enter account holder name to deposit money: ")
@@ -105,9 +117,9 @@ def handle_deposit_money(backend):
             print(f"Error: {e}")
         except Exception as e:
             print(f"Unexpected error occurred: {e}")
-
+#Sebastian Williams
+#This function handles potential user errors in ui when withdrawing money from an account
 def handle_withdraw_money(backend):
-    """Handle withdrawing money from an account."""
     while True:
         try:
             uname = get_input("Enter account holder name to withdraw money: ")
@@ -124,8 +136,9 @@ def handle_withdraw_money(backend):
             print(f"Error: {e}")  # Example: Insufficient funds
         except Exception as e:
             print(f"Unexpected error occurred: {e}")
+#Sebastian Williams
+#This fn handles potential errors a user makes in the ui whilst viewing credit score
 def handle_view_credit_score(backend):
-    """Handle viewing the credit score of a user."""
     while True:
         try:
             uname = get_input("Enter account holder name to view credit score: ")
@@ -140,7 +153,8 @@ def handle_view_credit_score(backend):
             print(f"Error: {e}")  # Backend-provided error message
         except Exception as e:
             print(f"Unexpected error occurred: {e}")
-
+#Sebastian Williams
+#This fn handles potential errors a user makes in the ui whilst transferring money
 def handle_transfer_money(backend):
     """Handle transferring money between accounts."""
     while True:
@@ -164,7 +178,8 @@ def handle_transfer_money(backend):
         except Exception as e:
             print(f"Unexpected error occurred: {e}")
 
-
+#Sebastian Williams
+#This fn handles potential errors an admin makes in the ui whilst loading PyBank users
 def handle_admin_mode(backend):
     """Optional admin functionality to view all users in the database."""
     db = backend.load_user()
@@ -174,6 +189,36 @@ def handle_admin_mode(backend):
             print(f"User: {uname}, Balance: {user.balance}, Debt: {user.debt}, Credit Score: {user.cscore}")
     else:
         print("Empty Database.")
+#Sebastian Williams
+#This fn handles potential errors a user makes in the ui whilst taking out a loan
+def handle_request_loan(backend):
+    while True:
+        try:
+            uname = get_input("Enter your account name to request a loan: ")
+            if uname is None:
+                break
+
+            if uname not in backend.userdb:
+                print(f"Error: Account '{uname}' does not exist!")
+            user = backend.userdb[uname]
+            max_loan_factor = 100
+            max_loan_allowed = user.cscore*max_loan_factor
+            print(f"New balance: ${user.balance:.2f},"
+                f"Total Debt: ${user.debt:.2f}, Credit Score: {user.cscore:.2f}")
+            print(f"Based on your credit score, you can take out a maximum loan of: ${max_loan_allowed:.2f}")
+
+            amount = float(get_input("Enter the  loan amount: "))
+            if amount <=0:
+                print("Loan amount must be greater than 0.")
+                continue
+
+            response = backend.request_loan(uname,amount)
+            print(response)
+            break
+
+        except ValueError as e:
+            print(f"Error: {e}")
+
 
 if __name__ == "__main__":
     main()

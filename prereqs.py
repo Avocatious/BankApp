@@ -74,6 +74,34 @@ class Backend:
         self.fname = fname
         self.load_user()
 
+    #Sebastian Williams
+    #Function allows users to request a loan, increasing their debt and balance
+    def request_loan(self, uname: str, amount: float)-> str:
+        if uname not in self.userdb:
+            raise ValueError(f"Account '{uname}' does not exist!")
+        user = self.userdb[uname]
+
+        max_loan_factor = 100
+        max_loan_allowed = user.cscore * max_loan_factor
+
+        if amount <=0:
+            raise ValueError("Loan amount must be greater than 0.")
+        if user.debt + amount >  max_loan_allowed:
+            raise ValueError(f"Loan denied. Based on your credit score, the maximum allowable loan is ${max_loan_allowed:.2f}.")
+        if user.debt + amount > 10000:
+            raise ValueError("Loan denied. Cannot exceed maximum debt of $10,000.")
+        if user.cscore < 300:
+            raise ValueError("Loan Denied. You don't have good credit. Scram!")
+
+        user.debt += amount
+        user.balance += amount
+
+        user.cscore -= 0.05 * amount
+        self.save()
+
+        return (f"Loan of ${amount:.2f} approved.\nNew balance: ${user.balance:.2f},"
+                f"Total Debt: ${user.debt:.2f}, Credit Score: {user.cscore:.2f}")
+
     # This function saves changes in the file.
     def save(self) -> None:
         #Saves all user data into the file
