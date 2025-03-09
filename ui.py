@@ -1,5 +1,4 @@
 from prereqs import User, Backend
-#boo!
 def main():
     backend = Backend()
     while True:
