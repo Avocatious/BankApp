@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import mock_open, patch
 from prereqs import User, Backend
 
 #Sebastian Williams
@@ -139,5 +140,31 @@ class TestBackend(unittest.TestCase):
 
 #Sebastian Williams
 #testing the load user function
-    #def test_load_user(self):
+    def test_load_user_success(self):
+        # Mock data representing a CSV file with user information
+        mock_data = "John Doe,1000,200,700\nJane Doe,1500,0,750\n"
+
+        # Mock the open function to simulate reading from a file
+        with patch("builtins.open", mock_open(read_data=mock_data)):
+            result = self.backend.load_user()
+
+        # Verify that the userdb is populated correctly
+        self.assertEqual(len(result), 2)
+        self.assertIn("John Doe", result)
+        self.assertIn("Jane Doe", result)
+        self.assertEqual(result["John Doe"].balance, 1000)
+        self.assertEqual(result["Jane Doe"].debt, 0)
+        self.assertEqual(result["Jane Doe"].cscore, 750)
+
+    def test_load_user_empty_file(self):
+        # Simulate an empty file (no user data)
+        mock_data = ""
+
+        # Mock the open function to simulate reading from an empty file
+        with patch("builtins.open", mock_open(read_data=mock_data)):
+            result = self.backend.load_user()
+
+        # Expect the userdb to remain empty since the file is empty
+        self.assertEqual(result, {})
+
 
