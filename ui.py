@@ -111,8 +111,10 @@ def handle_deposit_money(backend) -> None:
             print("Deposit successful! New Balance: {}".format(backend.userdb[uname].balance))
             break
 
-        except ValueError as e:
-            print(f"Error: {e}")
+
+
+        except ValueError:
+            print("Invalid deposit amount! Please enter a numeric value.")
         except Exception as e:
             print(f"Unexpected error occurred: {e}")
 
