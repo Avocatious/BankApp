@@ -158,7 +158,6 @@ class Backend:
         self.userdb[uname].withdraw(amount)
 
     # Vishal Murali Kannan
-    # Value errors added (Sebastian W)
     # This function displays credit score of the user's account
     def cscore_viewer(self, uname: str) -> float:
         if uname not in self.userdb:
@@ -166,7 +165,6 @@ class Backend:
         return self.userdb[uname].view_cscore()
 
     # Vishal Murali Kannan
-    # Value errors added - Sebastian W
     # This function takes in sender and recipient name, and calls the transfer function between those two accounts
     def transfer_money(self, sender: str, recipient: str, amount: float) -> str:
         if sender not in self.userdb or recipient not in self.userdb:

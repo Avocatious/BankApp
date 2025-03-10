@@ -200,7 +200,7 @@ def cscore_viewer(self) -> float:
 
 
 14.
-#This function takes in snder and recipient name, and calls the transfer function between those two accounts
+#This function takes in sender and recipient name, and calls the transfer function between those two accounts
 #Returns a string showing the status of transaction. 
 
 def transfer_money(self) -> str:

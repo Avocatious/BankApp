@@ -2,9 +2,8 @@ import unittest
 from unittest.mock import mock_open, patch
 from prereqs import User, Backend
 
-#Sebastian Williams
+#Sebastian Williams and Vishal Murali Kannan
 #Test cases for the backend function
-
 class TestUser(unittest.TestCase):
 
 #SW
@@ -138,7 +137,7 @@ class TestBackend(unittest.TestCase):
                     "New balance: $1500.00,Total Debt: $500.00, Credit Score: 675.00")
         self.assertEqual(result, expected)
 
-#Sebastian Williams
+#Vishal Murali Kannan
 #testing the load user function
     def test_load_user_success(self):
         # Mock data representing a CSV file with user information
@@ -155,7 +154,7 @@ class TestBackend(unittest.TestCase):
         self.assertEqual(result["John Doe"].balance, 1000)
         self.assertEqual(result["Jane Doe"].debt, 0)
         self.assertEqual(result["Jane Doe"].cscore, 750)
-
+#Vishal Murali Kannan
     def test_load_user_empty_file(self):
         # Simulate an empty file (no user data)
         mock_data = ""
