@@ -4,7 +4,7 @@ from prereqs import User, Backend
 
 # Sebastian Williams
 # Allows users to return to menu at any point in using PyBank
-def get_input(prompt:str):
+def get_input(prompt:str) -> str:
     user_input = input(prompt)
     if user_input.lower() == 'menu':
         confirm = input("You are returning to menu. Your progres in this section will NOT be saved. Type 'yes' to continue or 'no' to stay: ")
@@ -29,10 +29,8 @@ def main():
         print("8. Super Secret Option")
         choice = get_input("What would you like to do today? Choose a number or type 'menu' at any point to return to menu: ")
 
-
         if choice is None:  # This will return user back to menu
             continue
-
 
         # Sebastian Williams
         # Executes functions from Backend based on user selection
@@ -49,7 +47,6 @@ def main():
             #Sebastian Williams
             elif choice in ['3', 'withdraw money']:
                 handle_withdraw_money(backend)
-
 
             #Sebastian Williams
             elif choice in ['4', 'view credit score']:
@@ -68,7 +65,6 @@ def main():
             elif  choice in ['8', 'lottery']:
                 handle_lottery_game(backend)
 
-
             #Vishal Murali Kannan
             elif choice.lower() == 'admin':
               handle_admin_mode(backend)
@@ -80,29 +76,31 @@ def main():
             print(f"Unexpected error: {e}")
 
 #Sebastian Williams
-#This function handles errors in the ui  for creating accounts
-# and references the backend functions
-def handle_create_account(backend):
+#This function handles errors in the ui  for creating accounts and references the backend functions
+def handle_create_account(backend) -> None:
     while True:
         try:
+            #Vishal Murali Kannan
             uname = get_input("Enter account holder name: ")
             if uname is None:
                 break
             balance = float(get_input("Enter initial deposit amount: "))
             response = backend.create_user(uname, balance)
             backend.save()
-            print(f"Account for {uname} successfully created!")
+            print("Account for {} successfully created!".format(uname))
             break
         except ValueError as e:
             print(f"Error: {e}")
 
         except Exception as e:
             print(f"Unexpected error occurred: {e}")
-#Sebastian Williams
+
+#Sebastian Williams - try and except loops
 #This fn handles errors with the deposit function from the backend
-def handle_deposit_money(backend):
+def handle_deposit_money(backend) -> None:
     while True:
         try:
+            # Vishal Murali Kannan
             uname = get_input("Enter account holder name to deposit money: ")
             if uname is None:
                 break
@@ -110,35 +108,38 @@ def handle_deposit_money(backend):
             dep = float(get_input("Enter deposit amount: "))
             backend.depositer(uname, dep)  # Backend handles validation
             backend.save()
-            print(f"Deposit successful! New Balance: {backend.userdb[uname].balance}")
+            print("Deposit successful! New Balance: {}".format(backend.userdb[uname].balance))
             break
 
         except ValueError as e:
             print(f"Error: {e}")
         except Exception as e:
             print(f"Unexpected error occurred: {e}")
-#Sebastian Williams
+
+#Sebastian Williams - try and except loops
 #This function handles potential user errors in ui when withdrawing money from an account
-def handle_withdraw_money(backend):
+def handle_withdraw_money(backend) -> None:
     while True:
         try:
+            # Vishal Murali Kannan
             uname = get_input("Enter account holder name to withdraw money: ")
             if uname is None:
                 break
 
             amount = float(get_input("Enter amount to withdraw: "))
-            backend.withdrawer(uname, amount)  # Backend handles checks like sufficient funds
+            backend.withdrawer(uname, amount)
             backend.save()
-            print(f"Withdrawal successful! New Balance: {backend.userdb[uname].balance}")
+            print("Withdrawal successful! New Balance: {}".format(backend.userdb[uname].balance))
             break
 
         except ValueError as e:
             print(f"Error: {e}")  # Example: Insufficient funds
         except Exception as e:
             print(f"Unexpected error occurred: {e}")
+
 #Sebastian Williams
 #This fn handles potential errors a user makes in the ui whilst viewing credit score
-def handle_view_credit_score(backend):
+def handle_view_credit_score(backend) -> None:
     while True:
         try:
             uname = get_input("Enter account holder name to view credit score: ")
@@ -153,9 +154,10 @@ def handle_view_credit_score(backend):
             print(f"Error: {e}")  # Backend-provided error message
         except Exception as e:
             print(f"Unexpected error occurred: {e}")
+
 #Sebastian Williams
 #This fn handles potential errors a user makes in the ui whilst transferring money
-def handle_transfer_money(backend):
+def handle_transfer_money(backend) -> None:
     """Handle transferring money between accounts."""
     while True:
         try:
@@ -180,18 +182,19 @@ def handle_transfer_money(backend):
 
 #Sebastian Williams
 #This fn handles potential errors an admin makes in the ui whilst loading PyBank users
-def handle_admin_mode(backend):
-    """Optional admin functionality to view all users in the database."""
+def handle_admin_mode(backend) -> None:
     db = backend.load_user()
+    # Vishal Murali Kannan
     if db:
         print("PyBank Users:")
         for uname, user in db.items():
-            print(f"User: {uname}, Balance: {user.balance}, Debt: {user.debt}, Credit Score: {user.cscore}")
+            print("User: {}, Balance: {}, Debt: {}, Credit Score: {}".format(uname, user.balance, user.debt, user.cscore))
     else:
         print("Empty Database.")
+
 #Sebastian Williams
 #This fn handles potential errors a user makes in the ui whilst taking out a loan
-def handle_request_loan(backend):
+def handle_request_loan(backend) -> None:
     while True:
         try:
             uname = get_input("Enter your account name to request a loan: ")

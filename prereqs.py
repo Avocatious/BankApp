@@ -1,7 +1,7 @@
 from sys import float_repr_style
 # Sebastian Williams and Vishal Murali Kannan
 class User:
-    #Sebastian Williams
+    # Vishal Murali Kannan
     # The function initializes the User class attributes
     # name: str - The name of the user
     # balance: float - The initial balance of the user
@@ -65,7 +65,7 @@ class User:
         recipient.balance += amount
         return True
 
-# Vishal Murali Kannan
+# Vishal Murali Kannan and Sebastian Williams
 class Backend:
     # The function initializes the Backend class
     # fname: the name of the file where user data is stored.
@@ -108,6 +108,7 @@ class Backend:
         with open(self.fname, 'w+') as fw:
             for user in self.userdb.values():
                 fw.write(f"{user.name},{user.balance},{user.debt},{user.cscore}\n")
+
     # Vishal Murali Kannan
     # The function loads all user data stored in Bankusers.txt
     def load_user(self) -> dict:
@@ -121,38 +122,37 @@ class Backend:
                     cscore = float(acc[3])
                     user = User(name, balance, debt, cscore)
                     self.userdb[name] = user
-            print("*****************PyBank Customers*****************")
             return self.userdb
         except FileNotFoundError:
             print("Database not found.")
+
     # Vishal Murali Kannan
     # The function creates a new user and stores their data in the dictionary
     def create_user(self, uname: str, balance: float) -> str:
         if uname in self.userdb:
-            return f"Account {uname} already exists!"
+            return "Account {} already exists!".format(uname)
         if balance <= 0:
             raise ValueError("Initial deposit must be greater than 0.")
-        debt, cscore = 0, 700 #default debt score for new users
+        debt, cscore = 0, 700
         self.userdb[uname] = User(uname, balance, debt, cscore)
-        return f"Account for {uname} created successfully."
+        return "Account for {} created.".format(uname)
 
     # Vishal Murali Kannan
     # This function allows a user to deposit money into their bank account
     def depositer(self, uname: str, amount: float) -> None:
         if uname not in self.userdb:
-            raise ValueError(f"Account {uname} not found.")  # Sebastian Williams (Value errors)
+            raise ValueError("Account {} not found.".format(uname))  # Sebastian Williams (Value errors)
 
         if amount <= 0:
             raise ValueError("Deposit amount must be greater than 0.")
         self.userdb[uname].deposit(amount)
-
 
     # Vishal Murali Kannan
     # Value errors (Sebastian W)
     # This function allows a user to withdraw money from their bank account
     def withdrawer(self, uname: str, amount:float) -> None:
         if uname not in self.userdb:
-            raise ValueError(f"Account {uname} not found.")
+            raise ValueError(f"Account {uname} not found.") # Sebastian Williams (Value errors)
         if amount <=0:
             raise ValueError("Withdrawal amount must be greater than 0.")
         self.userdb[uname].withdraw(amount)
@@ -162,7 +162,7 @@ class Backend:
     # This function displays credit score of the user's account
     def cscore_viewer(self, uname: str) -> float:
         if uname not in self.userdb:
-            raise ValueError(f"Account {uname} not found.")
+            raise ValueError("Account {} not found.".format(uname))
         return self.userdb[uname].view_cscore()
 
     # Vishal Murali Kannan

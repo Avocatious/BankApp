@@ -5,7 +5,7 @@ import time
 
 
 # Spin the wheel console animation.. (not really an animation)
-def spin_wheel_animation():
+def spin_wheel_animation() -> str:
     print("Spinning the wheel...", end="", flush=True)
     outcomes = ["BIG WIN!!!", "You lost...", "You doubled your money!", "Neutral spin"]
     probabilities = [
@@ -27,7 +27,7 @@ def spin_wheel_animation():
 
 
 # handles lottery game stuff
-def handle_lottery_game(backend):
+def handle_lottery_game(backend) -> None:
     # Game loop
     from ui import get_input
 
