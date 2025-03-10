@@ -1,4 +1,4 @@
-from Lottery_code import handle_lottery_game
+from lottery import handle_lottery_game
 from prereqs import User, Backend
 #Sebastian Williams and Vishal Murali Kannan
 
