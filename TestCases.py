@@ -3,7 +3,7 @@ from unittest.mock import mock_open, patch
 from prereqs import User, Backend
 
 #Sebastian Williams
-#Test cases for the backend functions
+#Test cases for the backend function
 
 class TestUser(unittest.TestCase):
 
@@ -164,7 +164,7 @@ class TestBackend(unittest.TestCase):
         with patch("builtins.open", mock_open(read_data=mock_data)):
             result = self.backend.load_user()
 
-        # Expect the userdb to remain empty since the file is empty
+        # Expect the userdb to remain empty since the file is empty.
         self.assertEqual(result, {})
 
 
